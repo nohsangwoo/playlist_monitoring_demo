@@ -43,7 +43,7 @@ export default async function handler(
         await page.goto(endpoint, { waitUntil: "domcontentloaded" });
 
         // wait 3 seconds
-        wait(4000);
+        wait(5000);
 
         // extract data
         await scrapeData(page);
@@ -65,7 +65,7 @@ export default async function handler(
             );
             if (counter < 3) {
                 // wait 2 seconds and try again
-                await wait(2000);
+                await wait(3000);
                 await scrapeData(page);
             } else {
                 console.log(`Unable to find category selector... Moving on.`);
@@ -74,6 +74,8 @@ export default async function handler(
         }
 
         const yt_list = await $("#grid-container ytd-video-renderer");
+        await wait(2000);
+
         yt_list.each((i: any, el: any) => {
             if (i >= 20) {
                 return;
@@ -92,9 +94,13 @@ export default async function handler(
             };
             yt_data.push(yt);
         });
+        await wait(2000);
 
         console.log("yt_data inside: ", yt_data);
-        res.status(200).json({ message: "Hello from Next.js!", data: yt_data });
+        res.status(200).json({
+            message: "Hello from Next.js!",
+            data: yt_data,
+        });
     };
 
     await runScraper(); // runScraper 함수가 완료될 때까지 기다림
